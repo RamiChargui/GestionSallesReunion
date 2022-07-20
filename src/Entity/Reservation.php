@@ -31,25 +31,31 @@ class Reservation
      */
     private $dateFin;
 
-    /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="reservation")
-     */
-    private $participants;
-
-    /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
-     */
-    private $responsable;
 
     /**
      * @ORM\OneToOne(targetEntity=Salle::class, inversedBy="reservation", cascade={"persist", "remove"})
      */
     private $salle;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="reunions")
+     */
+    private $participiants;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservationsCreer")
+     */
+    private $respansable;
+
+
+    
+
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->participiants = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -81,47 +87,6 @@ class Reservation
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getParticipants(): Collection
-    {
-        return $this->participants;
-    }
-
-    public function addParticipant(User $participant): self
-    {
-        if (!$this->participants->contains($participant)) {
-            $this->participants[] = $participant;
-            $participant->setReservation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(User $participant): self
-    {
-        if ($this->participants->removeElement($participant)) {
-            // set the owning side to null (unless already changed)
-            if ($participant->getReservation() === $this) {
-                $participant->setReservation(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getResponsable(): ?User
-    {
-        return $this->responsable;
-    }
-
-    public function setResponsable(?User $responsable): self
-    {
-        $this->responsable = $responsable;
-
-        return $this;
-    }
 
     public function getSalle(): ?Salle
     {
@@ -138,6 +103,48 @@ class Reservation
     {
         return (string) $this->id;
     }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getParticipiants(): Collection
+    {
+        return $this->participiants;
+    }
+
+    public function addParticipiant(User $participiant): self
+    {
+        if (!$this->participiants->contains($participiant)) {
+            $this->participiants[] = $participiant;
+            $participiant->addReunion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipiant(User $participiant): self
+    {
+        if ($this->participiants->removeElement($participiant)) {
+            $participiant->removeReunion($this);
+        }
+
+        return $this;
+    }
+
+    public function getRespansable(): ?User
+    {
+        return $this->respansable;
+    }
+
+    public function setRespansable(?User $respansable): self
+    {
+        $this->respansable = $respansable;
+
+        return $this;
+    }
+
+   
+
 
 
 }

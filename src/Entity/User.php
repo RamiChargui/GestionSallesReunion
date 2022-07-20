@@ -4,6 +4,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Department;
 use App\Entity\Reservation;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,9 +47,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $department;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Reservation::class, inversedBy="participants")
+     * @ORM\ManyToMany(targetEntity=Reservation::class, inversedBy="participiants")
      */
-    private $reservation;
+    private $reunions;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $prenom;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="respansable")
+     */
+    private $reservationsCreer;
+
+    
+
+    public function __construct()
+    {
+        $this->reunions = new ArrayCollection();
+        $this->reservationsCreer = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,15 +174,90 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getReservation(): ?Reservation
+   
+
+    public function __toString()
     {
-        return $this->reservation;
+        return (string) $this->nom;
     }
 
-    public function setReservation(?Reservation $reservation): self
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReunions(): Collection
     {
-        $this->reservation = $reservation;
+        return $this->reunions;
+    }
+
+    public function addReunion(Reservation $reunion): self
+    {
+        if (!$this->reunions->contains($reunion)) {
+            $this->reunions[] = $reunion;
+        }
 
         return $this;
     }
+
+    public function removeReunion(Reservation $reunion): self
+    {
+        $this->reunions->removeElement($reunion);
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservationsCreer(): Collection
+    {
+        return $this->reservationsCreer;
+    }
+
+    public function addReservationsCreer(Reservation $reservationsCreer): self
+    {
+        if (!$this->reservationsCreer->contains($reservationsCreer)) {
+            $this->reservationsCreer[] = $reservationsCreer;
+            $reservationsCreer->setRespansable($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationsCreer(Reservation $reservationsCreer): self
+    {
+        if ($this->reservationsCreer->removeElement($reservationsCreer)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationsCreer->getRespansable() === $this) {
+                $reservationsCreer->setRespansable(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }
