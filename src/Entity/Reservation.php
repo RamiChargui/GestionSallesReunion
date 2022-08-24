@@ -21,21 +21,9 @@ class Reservation
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $dateDeb;
+    
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $dateFin;
-
-
-    /**
-     * @ORM\OneToOne(targetEntity=Salle::class, inversedBy="reservation", cascade={"persist", "remove"})
-     */
-    private $salle;
+    
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="reunions")
@@ -46,6 +34,26 @@ class Reservation
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservationsCreer")
      */
     private $respansable;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $jour;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $timeDeb;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $timeFin;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Salle::class, inversedBy="reservations")
+     */
+    private $salle;
 
 
     
@@ -63,42 +71,9 @@ class Reservation
         return $this->id;
     }
 
-    public function getDateDeb(): ?\DateTimeInterface
-    {
-        return $this->dateDeb;
-    }
+  
 
-    public function setDateDeb(\DateTimeInterface $dateDeb): self
-    {
-        $this->dateDeb = $dateDeb;
-
-        return $this;
-    }
-
-    public function getDateFin(): ?\DateTimeInterface
-    {
-        return $this->dateFin;
-    }
-
-    public function setDateFin(\DateTimeInterface $dateFin): self
-    {
-        $this->dateFin = $dateFin;
-
-        return $this;
-    }
-
-
-    public function getSalle(): ?Salle
-    {
-        return $this->salle;
-    }
-
-    public function setSalle(?Salle $salle): self
-    {
-        $this->salle = $salle;
-
-        return $this;
-    }
+   
     public function __toString()
     {
         return (string) $this->id;
@@ -139,6 +114,54 @@ class Reservation
     public function setRespansable(?User $respansable): self
     {
         $this->respansable = $respansable;
+
+        return $this;
+    }
+
+    public function getJour(): ?\DateTimeInterface
+    {
+        return $this->jour;
+    }
+
+    public function setJour(\DateTimeInterface $jour): self
+    {
+        $this->jour = $jour;
+
+        return $this;
+    }
+
+    public function getTimeDeb(): ?\DateTimeInterface
+    {
+        return $this->timeDeb;
+    }
+
+    public function setTimeDeb(\DateTimeInterface $timeDeb): self
+    {
+        $this->timeDeb = $timeDeb;
+
+        return $this;
+    }
+
+    public function getTimeFin(): ?\DateTimeInterface
+    {
+        return $this->timeFin;
+    }
+
+    public function setTimeFin(\DateTimeInterface $timeFin): self
+    {
+        $this->timeFin = $timeFin;
+
+        return $this;
+    }
+
+    public function getSalle(): ?Salle
+    {
+        return $this->salle;
+    }
+
+    public function setSalle(?Salle $salle): self
+    {
+        $this->salle = $salle;
 
         return $this;
     }

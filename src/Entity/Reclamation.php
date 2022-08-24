@@ -20,14 +20,11 @@ class Reclamation
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      */
     private $dateRec;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Salle::class, inversedBy="reclamation", cascade={"persist", "remove"})
-     */
-    private $salle;
+   
 
     /**
      * @ORM\Column(type="boolean")
@@ -38,6 +35,16 @@ class Reclamation
      * @ORM\Column(type="text")
      */
     private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reclamations")
+     */
+    private $proprieter;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Salle::class, inversedBy="reclamations")
+     */
+    private $salle;
 
     public function getId(): ?int
     {
@@ -56,17 +63,7 @@ class Reclamation
         return $this;
     }
 
-    public function getSalle(): ?Salle
-    {
-        return $this->salle;
-    }
-
-    public function setSalle(?Salle $salle): self
-    {
-        $this->salle = $salle;
-
-        return $this;
-    }
+   
 
     public function isEtat(): ?bool
     {
@@ -95,5 +92,29 @@ class Reclamation
     public function __toString()
     {
         return (string) $this->id;
+    }
+
+    public function getProprieter(): ?User
+    {
+        return $this->proprieter;
+    }
+
+    public function setProprieter(?User $proprieter): self
+    {
+        $this->proprieter = $proprieter;
+
+        return $this;
+    }
+
+    public function getSalle(): ?Salle
+    {
+        return $this->salle;
+    }
+
+    public function setSalle(?Salle $salle): self
+    {
+        $this->salle = $salle;
+
+        return $this;
     }
 }

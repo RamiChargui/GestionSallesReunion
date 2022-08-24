@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private $roles = ["ROLE_USER"];
 
     /**
      * @var string The hashed password
@@ -66,8 +66,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $reservationsCreer;
 
-    
+    private $plainPassword;
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $email): self
+    {
+        $this->plainPassword = $email;
+
+        return $this;
+    }
+
+    
+    
     public function __construct()
     {
         $this->reunions = new ArrayCollection();

@@ -9,8 +9,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>DateDeb</th>
-                <th>DateFin</th>
+                <th>Jour </th>
+                <th>TimeDeb</th>
+                <th>TimeFin</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -18,8 +19,10 @@
         {% for reservation in reservations %}
             <tr>
                 <td>{{ reservation.id }}</td>
-                <td>{{ reservation.dateDeb ? reservation.dateDeb|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ reservation.dateFin ? reservation.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ reservation.jour ? reservation.jour|date('Y-m-d') : '' }}</td>
+                <td>{{ reservation.timeDeb ? reservation.timeDeb|date('H:i') : '' }}</td>
+                <td>{{ reservation.timeFin ? reservation.timeFin|date('H:i') : '' }}</td>
+                
                 <td>
                     <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">show</a>
                     <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">edit</a>

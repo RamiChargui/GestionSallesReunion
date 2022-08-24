@@ -16,6 +16,7 @@ class SalleType extends AbstractType
             ->add('capacite')
             ->add('reservation')
             ->add('reclamation')
+            
         ;
     }
 

@@ -35,6 +35,7 @@ class SalleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $salle->setEtat(true);
             $salleRepository->add($salle, true);
 
             return $this->redirectToRoute('app_salle_index', [], Response::HTTP_SEE_OTHER);
