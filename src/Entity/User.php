@@ -4,6 +4,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Department;
 use App\Entity\Reservation;
+use App\Entity\Notification;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -68,6 +69,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private $plainPassword;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Notification::class, mappedBy="usersConcernes")
+     */
+    private $notifications;
+
+
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -86,6 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->reunions = new ArrayCollection();
         $this->reservationsCreer = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -273,5 +281,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->addUsersConcerne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            $notification->removeUsersConcerne($this);
+        }
+
+        return $this;
+    }
    
 }
